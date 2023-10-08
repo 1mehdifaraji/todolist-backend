@@ -37,6 +37,20 @@ app.put("/list", async (req, res) => {
   res.json(list);
 });
 
+app.delete("/list", async (req, res) => {
+  const body = req.body;
+
+  const filteredList = list.list.filter(
+    (todo) => body.description !== todo.description
+  );
+
+  list.list = filteredList;
+
+  fs.writeFile(filename, JSON.stringify(list), () => {});
+
+  res.json(list);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
