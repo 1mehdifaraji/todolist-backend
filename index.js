@@ -5,6 +5,8 @@ const fs = require("fs");
 const app = express();
 const port = 8081;
 
+const filename = "list.json";
+
 app.use(express.json());
 
 app.get("/list", (req, res) => {
@@ -16,7 +18,7 @@ app.post("/list", async (req, res) => {
   const todo = req.body;
 
   list.list.push(todo);
-  fs.writeFile("list.json", JSON.stringify(list), () => {});
+  fs.writeFile(filename, JSON.stringify(list), () => {});
   res.json(list);
 });
 
