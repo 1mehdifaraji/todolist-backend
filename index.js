@@ -22,6 +22,21 @@ app.post("/list", async (req, res) => {
   res.json(list);
 });
 
+app.put("/list", async (req, res) => {
+  const body = req.body;
+
+  list.list.map((todo) => {
+    const newTodo = { ...todo };
+    if (body.description === todo.description)
+      todo.isCompleted = !todo.isCompleted;
+    return newTodo;
+  });
+
+  fs.writeFile(filename, JSON.stringify(list), () => {});
+
+  res.json(list);
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
