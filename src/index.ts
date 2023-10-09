@@ -1,6 +1,6 @@
-const express = require("express");
-const list = require("./list.json");
-const fs = require("fs");
+import express, { RequestHandler } from "express";
+import list from "./list.json";
+import fs from "fs";
 
 const app = express();
 const port = 8081;
@@ -9,20 +9,20 @@ const filename = "list.json";
 
 app.use(express.json());
 
-app.get("/list", (req, res) => {
+app.get("/list", ((req, res) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.send(list);
-});
+}) as RequestHandler);
 
-app.post("/list", async (req, res) => {
+app.post("/list", (async (req, res) => {
   const todo = req.body;
 
   list.list.push(todo);
   fs.writeFile(filename, JSON.stringify(list), () => {});
   res.json(list);
-});
+}) as RequestHandler);
 
-app.put("/list", async (req, res) => {
+app.put("/list", (async (req, res) => {
   const body = req.body;
 
   list.list.map((todo) => {
@@ -35,9 +35,9 @@ app.put("/list", async (req, res) => {
   fs.writeFile(filename, JSON.stringify(list), () => {});
 
   res.json(list);
-});
+}) as RequestHandler);
 
-app.delete("/list", async (req, res) => {
+app.delete("/list", (async (req, res) => {
   const body = req.body;
 
   const filteredList = list.list.filter(
@@ -49,8 +49,8 @@ app.delete("/list", async (req, res) => {
   fs.writeFile(filename, JSON.stringify(list), () => {});
 
   res.json(list);
-});
+}) as RequestHandler);
 
 app.listen(port, () => {
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Todolist app listening on port ${port}`);
 });
