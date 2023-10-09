@@ -1,12 +1,14 @@
 import express, { RequestHandler } from "express";
 import list from "./list.json";
 import fs from "fs";
+import cors from "cors";
 
 const app = express();
 const port = 8081;
 
-const filename = "list.json";
+const filename = "src/list.json";
 
+app.use(cors());
 app.use(express.json());
 
 app.get("/list", ((req, res) => {
@@ -37,11 +39,11 @@ app.put("/list", (async (req, res) => {
   res.json(list);
 }) as RequestHandler);
 
-app.delete("/list", (async (req, res) => {
-  const body = req.body;
+app.delete("/list/:description", (async (req, res) => {
+  const description = req.params.description;
 
   const filteredList = list.list.filter(
-    (todo) => body.description !== todo.description
+    (todo) => description !== todo.description
   );
 
   list.list = filteredList;

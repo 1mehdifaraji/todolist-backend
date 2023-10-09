@@ -53,15 +53,17 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
 var list_json_1 = __importDefault(require("./list.json"));
 var fs_1 = __importDefault(require("fs"));
+var cors_1 = __importDefault(require("cors"));
 var app = (0, express_1.default)();
 var port = 8081;
-var filename = "list.json";
+var filename = "src/list.json";
+app.use((0, cors_1.default)());
 app.use(express_1.default.json());
-app.get("/list", function (req, res) {
+app.get("/list", (function (req, res) {
     res.header("Access-Control-Allow-Origin", "*");
     res.send(list_json_1.default);
-});
-app.post("/list", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+}));
+app.post("/list", (function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var todo;
     return __generator(this, function (_a) {
         todo = req.body;
@@ -70,8 +72,8 @@ app.post("/list", function (req, res) { return __awaiter(void 0, void 0, void 0,
         res.json(list_json_1.default);
         return [2 /*return*/];
     });
-}); });
-app.put("/list", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+}); }));
+app.put("/list", (function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var body;
     return __generator(this, function (_a) {
         body = req.body;
@@ -85,18 +87,19 @@ app.put("/list", function (req, res) { return __awaiter(void 0, void 0, void 0, 
         res.json(list_json_1.default);
         return [2 /*return*/];
     });
-}); });
-app.delete("/list", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var body, filteredList;
+}); }));
+app.delete("/list/:description", (function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var description, filteredList;
     return __generator(this, function (_a) {
-        body = req.body;
-        filteredList = list_json_1.default.list.filter(function (todo) { return body.description !== todo.description; });
+        description = req.params.description;
+        filteredList = list_json_1.default.list.filter(function (todo) { return description !== todo.description; });
         list_json_1.default.list = filteredList;
+        console.log(filteredList);
         fs_1.default.writeFile(filename, JSON.stringify(list_json_1.default), function () { });
         res.json(list_json_1.default);
         return [2 /*return*/];
     });
-}); });
+}); }));
 app.listen(port, function () {
     console.log("Todolist app listening on port ".concat(port));
 });
